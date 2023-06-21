@@ -1,0 +1,19 @@
+[package]
+name = "smacktivity"
+version = "0.1.0"
+edition = "2021"
+default-run = "smacktivity"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0.164", features = ["derive"] }
+serde_json = "1.0.97"
+tokio = { version = "1.28.2", features = ["tracing"] }
+toml = "0.7.4"
+tracing-subscriber = "0.3.17"
+url = { version = "2.4.0", features = ["serde"] }
+smacktivity-macros = { path = "smacktivity-macros" }
+
+[[bin]]
+name = "from-stdin"
