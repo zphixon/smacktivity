@@ -1,9 +1,31 @@
 # smacktivity
 
-single-user activitypub implementation
+(eventually) a single-user activitypub implementation and activitypub library
+for rust
 
 
-## parts that are out-of-spec
+## TODO
 
-- @context only supports the string "https://www.w3.org/ns/activitystreams"
-- 
+- get in spec
+- serde
+    - parsing in a nice way that gracefully handles broken stuff
+- networking (dereferencing JSON-LD links)
+    - how is serde gonna work?
+
+```rust
+// im imagining an api sorta like this
+reqwest::get(url)
+    .await?
+    .json::<Object>()
+    .await?
+    .resolve() // maybe choose what network provider here?
+    .await?;
+```
+
+
+## parts that are currently out-of-spec
+
+- @context
+- a bunch of property types
+- object hierarchy
+    - probably won't do this one. doesn't seem super useful for implementors.
