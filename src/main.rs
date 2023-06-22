@@ -2,8 +2,10 @@ use url::Url;
 
 fn main() {
     let obj = smacktivity::Object {
-        id: Some(Url::parse("https://grape.surgery/smack/outbox").unwrap()),
-        type_: smacktivity::ActivityStreamsType::Actor,
+        id: Some(smacktivity::IdProperty(
+            Url::parse("https://grape.surgery/smack/outbox").unwrap(),
+        )),
+        type_: smacktivity::TypeProperty(smacktivity::ActivityStreamsType::Actor),
         ..Default::default()
     };
 

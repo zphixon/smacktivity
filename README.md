@@ -27,5 +27,7 @@ reqwest::get(url)
 
 - @context
 - a bunch of property types
+    - closer now but still some stuff like datetime, language tags, duration,
+      units, rel, @context need to be corrected
 - object hierarchy
     - probably won't do this one. doesn't seem super useful for implementors.

@@ -88,11 +88,11 @@ pub enum ActivityStreamsContext {
 }
 
 smacktivity_macros::object!(Object {
-    schema_context ("@context"): ActivityStreamsContext = ActivityStreamsContext::PlainString,
-
+    schema_context ("@context"): ActivityStreamsContext
+        = SchemaContextProperty(ActivityStreamsContext::PlainString),
+    type_ ("type"): ActivityStreamsType
+        = TypeProperty(ActivityStreamsType::Object),
     id?: url::Url,
-    type_ ("type"): ActivityStreamsType = ActivityStreamsType::Object,
-
     actor?: Object,
     attachment?: Object,
     attributed_to?: Object,
@@ -113,7 +113,7 @@ smacktivity_macros::object!(Object {
     items?: Object,
     one_of?: Object,
     any_of?: Object,
-    closed?: Object, // TODO - Object | Link | dateTime | boolean
+    closed?: Object | String | bool, // TODO datetime
     origin?: Object,
     next?: Object,
     object?: Object,
@@ -124,11 +124,11 @@ smacktivity_macros::object!(Object {
     tag?: Object,
     target?: Object,
     to?: Object,
-    url?: Object, // TODO - url | Link
+    url?: Object | url::Url,
     accuracy?: f32,
     altitude?: f32,
-    content?: String, // TODO - string | langString
-    name?: String, // TODO - string | langString
+    content?: String, // TODO - langString
+    name?: String, // TODO - langString
     duration?: String, // TODO - duration
     height?: u32,
     href?: url::Url,
@@ -143,7 +143,7 @@ smacktivity_macros::object!(Object {
     radius?: f32,
     rel?: Object, // TODO - RFC5988/HTML5 Link Relation?
     start_index?: u32,
-    summary?: String, // TODO - string | langString
+    summary?: String, // TODO - langString
     total_items?: u32,
     units?: String, // TODO - string enum
     updated?: String, // TODO - dateTime
