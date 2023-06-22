@@ -6,6 +6,14 @@ use proc_macro2::Span;
 use quote::ToTokens;
 use syn::{parse::Parse, parse_macro_input, token, Expr, Ident, LitStr, Token, Type, TypePath};
 
+fn is_object(type_: &Type) -> bool {
+    matches!(type_,
+        Type::Path(TypePath { path, qself: None })
+            if path.segments.len() == 1
+                && path.segments.first().unwrap().ident.to_string() == "Object"
+    )
+}
+
 struct Property {
     name: Ident,
     serializes_to: String,
@@ -66,85 +74,41 @@ impl Parse for Property {
     }
 }
 
-struct Object {
-    properties: Vec<Property>,
-}
-
-impl Parse for Object {
-    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let properties = input
-            .parse_terminated(Property::parse, Token![,])?
-            .into_iter()
-            .collect();
-
-        Ok(Object {
-            properties,
-        })
-    }
-}
-
-impl ToTokens for Object {
+impl ToTokens for Property {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
-        let Object {
-            properties,
-        } = self;
-
-        fn is_object(type_: &Type) -> bool {
-            matches!(type_,
-                Type::Path(TypePath { path, qself: None })
-                    if path.segments.len() == 1
-                        && path.segments.first().unwrap().ident.to_string() == "Object"
-            )
-        }
-
-        let property_types = properties.iter().map(
-            |Property {
-                 name,
-                 type_name,
-                 types,
-                 ..
-             }| {
-                let ident = Ident::new(&type_name, name.span());
-                match &types[..] {
-                    [type_] => {
-                        if is_object(type_) {
-                            quote::quote! {
-                                #[derive(Debug)]
-                                pub struct #ident(pub Box<#type_>);
-                            }
-                        } else {
-                            quote::quote! {
-                                #[derive(Debug)]
-                                pub struct #ident(pub #type_);
-                            }
-                        }
+        let ident = Ident::new(&self.type_name, self.name.span());
+        let items = match &self.types[..] {
+            [type_] => {
+                if is_object(type_) {
+                    quote::quote! {
+                        #[derive(Debug)]
+                        pub struct #ident(pub Box<#type_>);
                     }
+                } else {
+                    quote::quote! {
+                        #[derive(Debug)]
+                        pub struct #ident(pub #type_);
+                    }
+                }
+            }
 
-                    _ => {
-                        let variant_names = match types
-                            .iter()
-                            .map(|type_| match type_ {
-                                Type::Path(TypePath { path, .. }) => match path.segments.last() {
-                                    Some(last) => {
-                                        Ok((last.ident.to_string().to_upper_camel_case(), type_))
-                                    }
-                                    _ => Err("type path must have at least one segment"),
-                                },
-                                _ => Err("must be a type path"),
-                            })
-                            .collect::<Result<Vec<_>, _>>()
-                        {
-                            Ok(variant_names) => variant_names,
-                            Err(err) => {
-                                let lit = LitStr::new(err, name.span());
-                                return quote::quote! { compile_error(#lit) };
-                            }
-                        };
-
+            _ => {
+                match self.types
+                    .iter()
+                    .map(|type_| match type_ {
+                        Type::Path(TypePath { path, .. }) => match path.segments.last() {
+                            Some(last) => Ok((last.ident.to_string().to_upper_camel_case(), type_)),
+                            _ => Err("type path must have at least one segment"),
+                        },
+                        _ => Err("must be a type path"),
+                    })
+                    .collect::<Result<Vec<_>, _>>()
+                {
+                    Ok(variant_names) => {
                         let variants = variant_names
                             .into_iter()
                             .map(|(variant_name, type_)| {
-                                let ident = Ident::new(&variant_name, name.span());
+                                let ident = Ident::new(&variant_name, self.name.span());
                                 if is_object(type_) {
                                     quote::quote! { #ident(Box< #type_ >), }
                                 } else {
@@ -159,10 +123,37 @@ impl ToTokens for Object {
                                 #(#variants)*
                             }
                         }
+                    },
+
+                    Err(err) => {
+                        let lit = LitStr::new(err, self.name.span());
+                        quote::quote! { compile_error(#lit) }
                     }
                 }
-            },
-        );
+            }
+        };
+        tokens.extend(items);
+    }
+}
+
+struct Object {
+    properties: Vec<Property>,
+}
+
+impl Parse for Object {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let properties = input
+            .parse_terminated(Property::parse, Token![,])?
+            .into_iter()
+            .collect();
+
+        Ok(Object { properties })
+    }
+}
+
+impl ToTokens for Object {
+    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+        let Object { properties } = self;
 
         let fields = properties.iter().map(
             |Property {
@@ -251,7 +242,7 @@ impl ToTokens for Object {
             }
         };
 
-        tokens.extend(property_types.into_iter());
+        properties.iter().for_each(|prop| prop.to_tokens(tokens));
         tokens.extend(the_struct.into_token_stream());
         tokens.extend(default_impl.into_token_stream());
         tokens.extend(debug_impl.into_token_stream());
