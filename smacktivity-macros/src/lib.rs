@@ -2,6 +2,7 @@ use std::collections::HashSet;
 
 use heck::{ToLowerCamelCase, ToUpperCamelCase};
 use proc_macro::TokenStream;
+use proc_macro2::Span;
 use quote::ToTokens;
 use syn::{parse::Parse, parse_macro_input, token, Expr, Ident, LitStr, Token, Type, TypePath};
 
@@ -66,23 +67,17 @@ impl Parse for Property {
 }
 
 struct Object {
-    object_name: Ident,
     properties: Vec<Property>,
 }
 
 impl Parse for Object {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let object_name = input.parse()?;
-
-        let content;
-        syn::braced!(content in input);
-        let properties = content
+        let properties = input
             .parse_terminated(Property::parse, Token![,])?
             .into_iter()
             .collect();
 
         Ok(Object {
-            object_name,
             properties,
         })
     }
@@ -91,16 +86,14 @@ impl Parse for Object {
 impl ToTokens for Object {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
         let Object {
-            object_name,
             properties,
         } = self;
 
-        fn is_object(type_: &Type, object_name: &Ident) -> bool {
-            let object_name = object_name.to_string();
+        fn is_object(type_: &Type) -> bool {
             matches!(type_,
                 Type::Path(TypePath { path, qself: None })
                     if path.segments.len() == 1
-                        && path.segments.first().unwrap().ident.to_string() == object_name
+                        && path.segments.first().unwrap().ident.to_string() == "Object"
             )
         }
 
@@ -114,7 +107,7 @@ impl ToTokens for Object {
                 let ident = Ident::new(&type_name, name.span());
                 match &types[..] {
                     [type_] => {
-                        if is_object(type_, object_name) {
+                        if is_object(type_) {
                             quote::quote! {
                                 #[derive(Debug)]
                                 pub struct #ident(pub Box<#type_>);
@@ -152,7 +145,7 @@ impl ToTokens for Object {
                             .into_iter()
                             .map(|(variant_name, type_)| {
                                 let ident = Ident::new(&variant_name, name.span());
-                                if is_object(type_, object_name) {
+                                if is_object(type_) {
                                     quote::quote! { #ident(Box< #type_ >), }
                                 } else {
                                     quote::quote! { #ident(#type_), }
@@ -191,7 +184,7 @@ impl ToTokens for Object {
         );
 
         let the_struct = quote::quote! {
-            pub struct #object_name {
+            pub struct Object {
                 #(#fields)*
             }
         };
@@ -211,9 +204,9 @@ impl ToTokens for Object {
             });
 
         let default_impl = quote::quote! {
-            impl Default for #object_name {
-                fn default() -> #object_name {
-                    #object_name {
+            impl Default for Object {
+                fn default() -> Object {
+                    Object {
                         #(#defaults)*
                     }
                 }
@@ -246,9 +239,9 @@ impl ToTokens for Object {
             },
         );
 
-        let object_name_lit = LitStr::new(&object_name.to_string(), object_name.span());
+        let object_name_lit = LitStr::new("Object", Span::call_site());
         let debug_impl = quote::quote! {
-            impl ::std::fmt::Debug for #object_name {
+            impl ::std::fmt::Debug for Object {
                 fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
                     let mut dbg = f.debug_struct(#object_name_lit);
                     #(#required_debugs)*
