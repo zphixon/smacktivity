@@ -4,7 +4,10 @@ use heck::{ToLowerCamelCase, ToUpperCamelCase};
 use proc_macro::TokenStream;
 use proc_macro2::Span;
 use quote::ToTokens;
-use syn::{parse::Parse, parse_macro_input, token, Expr, Ident, LitStr, Token, Type, TypePath};
+use syn::{
+    parse::Parse, parse_macro_input, spanned::Spanned, token, Expr, Ident, LitStr, Token, Type,
+    TypePath,
+};
 
 fn is_object(type_: &Type) -> bool {
     matches!(type_,
@@ -14,11 +17,70 @@ fn is_object(type_: &Type) -> bool {
     )
 }
 
+struct TypeVariant {
+    type_: Type,
+    variant_name: Option<Ident>,
+}
+
+impl Parse for TypeVariant {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let type_ = input.parse()?;
+        let variant_name = if input.peek(token::Paren) {
+            let content;
+            syn::parenthesized!(content in input);
+            Some(content.parse()?)
+        } else {
+            None
+        };
+
+        Ok(TypeVariant {
+            type_,
+            variant_name,
+        })
+    }
+}
+
+impl ToTokens for TypeVariant {
+    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+        let variant_name = self
+            .variant_name
+            .as_ref()
+            .map(|ident| Ok(ident.to_string()))
+            .unwrap_or(match &self.type_ {
+                Type::Path(TypePath { path, .. }) => match path.segments.last() {
+                    Some(last) => Ok(last.ident.to_string().to_upper_camel_case()),
+                    _ => Err("type path must have at least one segment"),
+                },
+                _ => Err("must be a type path"),
+            });
+
+        let variant_name = match variant_name {
+            Ok(variant_name) => Ident::new(&variant_name, self.type_.span()),
+            Err(err) => {
+                let lit = LitStr::new(err, self.type_.span());
+                tokens.extend(quote::quote! { compile_error(#lit) });
+                return;
+            }
+        };
+
+        let the_type = &self.type_;
+        let type_ = if is_object(&self.type_) {
+            quote::quote! { Box<#the_type> }
+        } else {
+            quote::quote! { #the_type }
+        };
+
+        tokens.extend(quote::quote! {
+            #variant_name(#type_)
+        });
+    }
+}
+
 struct Property {
     name: Ident,
     serializes_to: String,
     type_name: String,
-    types: Vec<Type>,
+    types: Vec<TypeVariant>,
     required: bool,
     default: Option<Expr>,
 }
@@ -78,7 +140,8 @@ impl ToTokens for Property {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
         let ident = Ident::new(&self.type_name, self.name.span());
         let items = match &self.types[..] {
-            [type_] => {
+            [variant] => {
+                let type_ = &variant.type_;
                 if is_object(type_) {
                     quote::quote! {
                         #[derive(Debug, serde::Serialize, serde::Deserialize)]
@@ -95,41 +158,15 @@ impl ToTokens for Property {
             }
 
             _ => {
-                match self.types
-                    .iter()
-                    .map(|type_| match type_ {
-                        Type::Path(TypePath { path, .. }) => match path.segments.last() {
-                            Some(last) => Ok((last.ident.to_string().to_upper_camel_case(), type_)),
-                            _ => Err("type path must have at least one segment"),
-                        },
-                        _ => Err("must be a type path"),
-                    })
-                    .collect::<Result<Vec<_>, _>>()
-                {
-                    Ok(variant_names) => {
-                        let variants = variant_names
-                            .into_iter()
-                            .map(|(variant_name, type_)| {
-                                let ident = Ident::new(&variant_name, self.name.span());
-                                if is_object(type_) {
-                                    quote::quote! { #ident(Box< #type_ >), }
-                                } else {
-                                    quote::quote! { #ident(#type_), }
-                                }
-                            })
-                            .collect::<Vec<_>>();
+                let variants = self
+                .types
+                .iter()
+                .map(|type_| quote::quote! { #type_ });
 
-                        quote::quote! {
-                            #[derive(Debug, serde::Serialize, serde::Deserialize)]
-                            pub enum #ident {
-                                #(#variants)*
-                            }
-                        }
-                    },
-
-                    Err(err) => {
-                        let lit = LitStr::new(err, self.name.span());
-                        quote::quote! { compile_error(#lit) }
+                quote::quote! {
+                    #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                    pub enum #ident {
+                        #(#variants,)*
                     }
                 }
             }
@@ -178,7 +215,7 @@ impl ToTokens for Object {
         );
 
         let the_struct = quote::quote! {
-            #[derive(serde::Serialize, serde::Deserialize)]
+            #[derive(serde::Serialize)]
             pub struct Object {
                 #(#fields)*
             }

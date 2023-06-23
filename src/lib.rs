@@ -88,8 +88,8 @@ pub enum ActivityStreamsContext {
 }
 
 smacktivity_macros::object!(
-    schema_context("@context"): ActivityStreamsContext =
-        SchemaContextProperty(ActivityStreamsContext::PlainString),
+    schema_context("@context"): ActivityStreamsContext | Vec<Object> =
+        SchemaContextProperty::ActivityStreamsContext(ActivityStreamsContext::PlainString),
     type_("type"): ActivityStreamsType = TypeProperty(ActivityStreamsType::Object),
     id?: url::Url,
     actor?: Object,
@@ -153,3 +153,11 @@ smacktivity_macros::object!(
     former_type?: Object,
     deleted?: String, // TODO - dateTime
 );
+
+impl<'de> serde::Deserialize<'de> for Object {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: serde::Deserializer<'de> {
+                todo!();
+    }
+}
