@@ -15,7 +15,7 @@ impl Display for Error {
 
 pub const ACTIVITYSTREAMS_CONTEXT: &str = "https://www.w3.org/ns/activitystreams";
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub enum ActivityStreamsType {
     Object,
     Link,
@@ -81,17 +81,16 @@ pub enum ActivityStreamsType {
     Mention,
 }
 
-#[derive(Debug)]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub enum ActivityStreamsContext {
     PlainString,
     List,
 }
 
 smacktivity_macros::object!(
-    schema_context ("@context"): ActivityStreamsContext
-        = SchemaContextProperty(ActivityStreamsContext::PlainString),
-    type_ ("type"): ActivityStreamsType
-        = TypeProperty(ActivityStreamsType::Object),
+    schema_context("@context"): ActivityStreamsContext =
+        SchemaContextProperty(ActivityStreamsContext::PlainString),
+    type_("type"): ActivityStreamsType = TypeProperty(ActivityStreamsType::Object),
     id?: url::Url,
     actor?: Object,
     attachment?: Object,
@@ -105,7 +104,7 @@ smacktivity_macros::object!(
     first?: Object,
     generator?: Object,
     icon?: Object,
-    image?: Object,
+    image?: Object | Vec<String>,
     in_reply_to?: Object,
     instrument?: Object,
     last?: Object,
@@ -127,8 +126,8 @@ smacktivity_macros::object!(
     url?: Object | url::Url,
     accuracy?: f32,
     altitude?: f32,
-    content?: String, // TODO - langString
-    name?: String, // TODO - langString
+    content?: String,  // TODO - langString
+    name?: String,     // TODO - langString
     duration?: String, // TODO - duration
     height?: u32,
     href?: url::Url,
@@ -137,15 +136,15 @@ smacktivity_macros::object!(
     latitude?: f32,
     longitude?: f32,
     media_type?: Object,
-    end_time?: String, // TODO - dateTime
-    published?: String, // TODO - dateTime
+    end_time?: String,   // TODO - dateTime
+    published?: String,  // TODO - dateTime
     start_time?: String, // TODO - dateTime
     radius?: f32,
     rel?: Object, // TODO - RFC5988/HTML5 Link Relation?
     start_index?: u32,
     summary?: String, // TODO - langString
     total_items?: u32,
-    units?: String, // TODO - string enum
+    units?: String,   // TODO - string enum
     updated?: String, // TODO - dateTime
     width?: u32,
     subject?: Object,
@@ -154,12 +153,3 @@ smacktivity_macros::object!(
     former_type?: Object,
     deleted?: String, // TODO - dateTime
 );
-
-impl<'de> serde::Deserialize<'de> for Object {
-    fn deserialize<D>(de: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        todo!()
-    }
-}

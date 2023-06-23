@@ -25,7 +25,8 @@ reqwest::get(url)
 
 ## parts that are currently out-of-spec
 
-- @context
+- "Functional" properties
+    - a really stupid name for properties that can have multiple values
 - a bunch of property types
     - closer now but still some stuff like datetime, language tags, duration,
       units, rel, @context need to be corrected

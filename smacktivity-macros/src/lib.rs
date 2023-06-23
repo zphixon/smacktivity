@@ -81,12 +81,14 @@ impl ToTokens for Property {
             [type_] => {
                 if is_object(type_) {
                     quote::quote! {
-                        #[derive(Debug)]
+                        #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                        #[serde(transparent)]
                         pub struct #ident(pub Box<#type_>);
                     }
                 } else {
                     quote::quote! {
-                        #[derive(Debug)]
+                        #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                        #[serde(transparent)]
                         pub struct #ident(pub #type_);
                     }
                 }
@@ -118,7 +120,7 @@ impl ToTokens for Property {
                             .collect::<Vec<_>>();
 
                         quote::quote! {
-                            #[derive(Debug)]
+                            #[derive(Debug, serde::Serialize, serde::Deserialize)]
                             pub enum #ident {
                                 #(#variants)*
                             }
@@ -164,17 +166,19 @@ impl ToTokens for Object {
              }| {
                 let type_ = Ident::new(&type_name, name.span());
 
-                let type_ = if !*required {
-                    quote::quote! { Option<#type_> }
+                if !*required {
+                    quote::quote! {
+                        #[serde(skip_serializing_if = "Option::is_none")]
+                        pub #name: Option<#type_>,
+                    }
                 } else {
-                    quote::quote! { #type_ }
-                };
-
-                quote::quote! { pub #name: #type_, }
+                    quote::quote! { pub #name: #type_, }
+                }
             },
         );
 
         let the_struct = quote::quote! {
+            #[derive(serde::Serialize, serde::Deserialize)]
             pub struct Object {
                 #(#fields)*
             }
