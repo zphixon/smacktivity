@@ -208,6 +208,15 @@ pub enum LinkObject {
     Object(Box<Object>),
 }
 
+impl LinkObject {
+    pub fn as_object_mut(&mut self) -> Option<&mut Object> {
+        match self {
+            LinkObject::Object(object) => Some(object.as_mut()),
+            _ => None,
+        }
+    }
+}
+
 impl std::fmt::Debug for LinkObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -361,8 +370,8 @@ pub struct Object {
     pub followers: Option<LinkObject>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub liked: Option<LinkObject>,
-    #[serde(default = "Vec::new", skip_serializing_if = "Vec::is_empty")]
-    pub streams: Vec<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")]
+    pub streams: NonFunctional<LinkObject>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoints: Option<EndpointsProperty>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -446,7 +455,7 @@ impl Default for Object {
             following: None,
             followers: None,
             liked: None,
-            streams: Vec::with_capacity(0),
+            streams: NonFunctional::None,
             endpoints: None,
             preferred_username: None,
 
@@ -863,8 +872,14 @@ impl std::fmt::Debug for Object {
         if let Some(liked) = self.liked.as_ref() {
             dbg.field("liked", &liked);
         }
-        if !self.streams.is_empty() {
-            dbg.field("streams", &self.streams);
+        match &self.streams {
+            NonFunctional::One(one) => {
+                dbg.field("streams", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("streams", &many);
+            }
+            _ => {}
         }
         if let Some(endpoints) = self.endpoints.as_ref() {
             dbg.field("endpoints", &endpoints);

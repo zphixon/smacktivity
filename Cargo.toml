@@ -20,3 +20,6 @@ tracing-subscriber = { version = "0.3.17", optional = true }
 reqwest = { version = "0.11.18", features = ["json", "rustls", "tokio-rustls", "tokio-util"], optional = true }
 async-recursion = "1.0.4"
 tracing = "0.1.37"
+argh = "0.1.10"
+futures = "0.3.28"
+heck = "0.4.1"
