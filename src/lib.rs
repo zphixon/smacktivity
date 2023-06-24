@@ -84,7 +84,7 @@ pub enum ActivityStreamsType {
     Mention,
 }
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[serde(untagged)]
 pub enum ActivityStreamsContext {
     Url(url::Url),
@@ -96,6 +96,21 @@ pub enum ActivityStreamsContext {
 impl Default for ActivityStreamsContext {
     fn default() -> Self {
         ActivityStreamsContext::Url(url::Url::parse(ACTIVITYSTREAMS_CONTEXT).unwrap())
+    }
+}
+
+impl std::fmt::Debug for ActivityStreamsContext {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ActivityStreamsContext::Url(url) => {
+                f.debug_tuple("Context").field(&format!("{}", url)).finish()
+            }
+            ActivityStreamsContext::String(string) => {
+                f.debug_tuple("Context").field(&string).finish()
+            }
+            ActivityStreamsContext::Map(map) => f.debug_tuple("Context").field(&map).finish(),
+            ActivityStreamsContext::List(list) => f.debug_tuple("Context").field(&list).finish(),
+        }
     }
 }
 
@@ -186,14 +201,23 @@ pub struct EndpointsProperty {
     shared_inbox: Option<url::Url>,
 }
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[serde(untagged)]
 pub enum LinkObject {
     Url(url::Url),
     Object(Box<Object>),
 }
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+impl std::fmt::Debug for LinkObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            LinkObject::Url(url) => f.debug_tuple("Link").field(&format!("{}", url)).finish(),
+            LinkObject::Object(object) => object.fmt(f),
+        }
+    }
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
 #[serde(default, rename_all = "camelCase")]
 pub struct Object {
     #[serde(rename = "@context")]
@@ -343,6 +367,9 @@ pub struct Object {
     pub endpoints: Option<EndpointsProperty>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preferred_username: Option<String>,
+
+    #[serde(flatten)]
+    pub rest: HashMap<String, serde_json::Value>,
 }
 
 impl Default for Object {
@@ -422,6 +449,434 @@ impl Default for Object {
             streams: Vec::with_capacity(0),
             endpoints: None,
             preferred_username: None,
+
+            rest: HashMap::default(),
         }
+    }
+}
+
+impl std::fmt::Debug for Object {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut dbg = f.debug_struct("Object");
+
+        dbg.field("@context", &self.schema_context);
+        dbg.field("type", &self.type_);
+        if let Some(id) = self.id.as_ref() {
+            dbg.field("id", &format!("{}", id));
+        }
+        match &self.actor {
+            NonFunctional::One(one) => {
+                dbg.field("actor", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("actor", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.attachment {
+            NonFunctional::One(one) => {
+                dbg.field("attachment", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("attachment", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.attributed_to {
+            NonFunctional::One(one) => {
+                dbg.field("attributed_to", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("attributed_to", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.audience {
+            NonFunctional::One(one) => {
+                dbg.field("audience", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("audience", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.bcc {
+            NonFunctional::One(one) => {
+                dbg.field("bcc", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("bcc", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.bto {
+            NonFunctional::One(one) => {
+                dbg.field("bto", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("bto", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.cc {
+            NonFunctional::One(one) => {
+                dbg.field("cc", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("cc", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.context {
+            NonFunctional::One(one) => {
+                dbg.field("context", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("context", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(current) = self.current.as_ref() {
+            dbg.field("current", &current);
+        }
+        if let Some(first) = self.first.as_ref() {
+            dbg.field("first", &first);
+        }
+        match &self.generator {
+            NonFunctional::One(one) => {
+                dbg.field("generator", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("generator", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.icon {
+            NonFunctional::One(one) => {
+                dbg.field("icon", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("icon", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.image {
+            NonFunctional::One(one) => {
+                dbg.field("image", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("image", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.in_reply_to {
+            NonFunctional::One(one) => {
+                dbg.field("in_reply_to", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("in_reply_to", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.instrument {
+            NonFunctional::One(one) => {
+                dbg.field("instrument", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("instrument", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(last) = self.last.as_ref() {
+            dbg.field("last", &last);
+        }
+        match &self.location {
+            NonFunctional::One(one) => {
+                dbg.field("location", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("location", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.items {
+            NonFunctional::One(one) => {
+                dbg.field("items", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("items", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.ordered_items {
+            NonFunctional::One(one) => {
+                dbg.field("ordered_items", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("ordered_items", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.one_of {
+            NonFunctional::One(one) => {
+                dbg.field("one_of", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("one_of", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.any_of {
+            NonFunctional::One(one) => {
+                dbg.field("any_of", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("any_of", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(closed) = self.closed.as_ref() {
+            dbg.field("closed", &closed);
+        }
+        match &self.origin {
+            NonFunctional::One(one) => {
+                dbg.field("origin", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("origin", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(next) = self.next.as_ref() {
+            dbg.field("next", &next);
+        }
+        match &self.object {
+            NonFunctional::One(one) => {
+                dbg.field("object", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("object", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(prev) = self.prev.as_ref() {
+            dbg.field("prev", &prev);
+        }
+        match &self.preview {
+            NonFunctional::One(one) => {
+                dbg.field("preview", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("preview", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.result {
+            NonFunctional::One(one) => {
+                dbg.field("result", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("result", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.replies {
+            NonFunctional::One(one) => {
+                dbg.field("replies", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("replies", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.tag {
+            NonFunctional::One(one) => {
+                dbg.field("tag", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("tag", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.target {
+            NonFunctional::One(one) => {
+                dbg.field("target", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("target", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.to {
+            NonFunctional::One(one) => {
+                dbg.field("to", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("to", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.url {
+            NonFunctional::One(one) => {
+                dbg.field("url", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("url", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(accuracy) = self.accuracy.as_ref() {
+            dbg.field("accuracy", &accuracy);
+        }
+        if let Some(altitude) = self.altitude.as_ref() {
+            dbg.field("altitude", &altitude);
+        }
+        match &self.content {
+            NonFunctional::One(one) => {
+                dbg.field("content", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("content", many);
+            }
+            NonFunctional::None => {}
+        }
+        match &self.name {
+            NonFunctional::One(one) => {
+                dbg.field("name", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("name", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(duration) = self.duration.as_ref() {
+            dbg.field("duration", &duration);
+        }
+        if let Some(height) = self.height.as_ref() {
+            dbg.field("height", &height);
+        }
+        if let Some(href) = self.href.as_ref() {
+            dbg.field("href", &format!("{}", href));
+        }
+        if let Some(hreflang) = self.hreflang.as_ref() {
+            dbg.field("hreflang", &hreflang);
+        }
+        if let Some(part_of) = self.part_of.as_ref() {
+            dbg.field("part_of", &part_of);
+        }
+        if let Some(latitude) = self.latitude.as_ref() {
+            dbg.field("latitude", &latitude);
+        }
+        if let Some(longitude) = self.longitude.as_ref() {
+            dbg.field("longitude", &longitude);
+        }
+        if let Some(media_type) = self.media_type.as_ref() {
+            dbg.field("media_type", &media_type);
+        }
+        if let Some(end_time) = self.end_time.as_ref() {
+            dbg.field("end_time", &end_time);
+        }
+        if let Some(published) = self.published.as_ref() {
+            dbg.field("published", &published);
+        }
+        if let Some(start_time) = self.start_time.as_ref() {
+            dbg.field("start_time", &start_time);
+        }
+        if let Some(radius) = self.radius.as_ref() {
+            dbg.field("radius", &radius);
+        }
+        match &self.rel {
+            NonFunctional::One(one) => {
+                dbg.field("rel", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("rel", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(start_index) = self.start_index.as_ref() {
+            dbg.field("start_index", &start_index);
+        }
+        match &self.summary {
+            NonFunctional::One(one) => {
+                dbg.field("summary", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("summary", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(total_items) = self.total_items.as_ref() {
+            dbg.field("total_items", &total_items);
+        }
+        if let Some(units) = self.units.as_ref() {
+            dbg.field("units", &units);
+        }
+        if let Some(updated) = self.updated.as_ref() {
+            dbg.field("updated", &updated);
+        }
+        if let Some(width) = self.width.as_ref() {
+            dbg.field("width", &width);
+        }
+        if let Some(subject) = self.subject.as_ref() {
+            dbg.field("subject", &subject);
+        }
+        match &self.relationship {
+            NonFunctional::One(one) => {
+                dbg.field("relationship", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("relationship", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(describes) = self.describes.as_ref() {
+            dbg.field("describes", &describes);
+        }
+        match &self.former_type {
+            NonFunctional::One(one) => {
+                dbg.field("former_type", &one);
+            }
+            NonFunctional::Many(many) => {
+                dbg.field("former_type", many);
+            }
+            NonFunctional::None => {}
+        }
+        if let Some(deleted) = self.deleted.as_ref() {
+            dbg.field("deleted", &deleted);
+        }
+        if let Some(source) = self.source.as_ref() {
+            dbg.field("source", &source);
+        }
+        if let Some(inbox) = self.inbox.as_ref() {
+            dbg.field("inbox", &inbox);
+        }
+        if let Some(outbox) = self.outbox.as_ref() {
+            dbg.field("outbox", &outbox);
+        }
+        if let Some(following) = self.following.as_ref() {
+            dbg.field("following", &following);
+        }
+        if let Some(followers) = self.followers.as_ref() {
+            dbg.field("followers", &followers);
+        }
+        if let Some(liked) = self.liked.as_ref() {
+            dbg.field("liked", &liked);
+        }
+        if !self.streams.is_empty() {
+            dbg.field("streams", &self.streams);
+        }
+        if let Some(endpoints) = self.endpoints.as_ref() {
+            dbg.field("endpoints", &endpoints);
+        }
+        if let Some(preferred_username) = self.preferred_username.as_ref() {
+            dbg.field("preferred_username", &preferred_username);
+        }
+
+        if !self.rest.is_empty() {
+            dbg.field("(rest)", &self.rest);
+        }
+
+        dbg.finish()
     }
 }
