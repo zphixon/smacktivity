@@ -1,0 +1,8 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "id": "https://friend.camp/users/darius/outbox",
+  "type": "OrderedCollection",
+  "totalItems": 32870,
+  "first": "https://friend.camp/users/darius/outbox?page=true",
+  "last": "https://friend.camp/users/darius/outbox?min_id=0&page=true"
+}

@@ -1,0 +1,982 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    {
+      "ostatus": "http://ostatus.org#",
+      "atomUri": "ostatus:atomUri",
+      "inReplyToAtomUri": "ostatus:inReplyToAtomUri",
+      "conversation": "ostatus:conversation",
+      "sensitive": "as:sensitive",
+      "toot": "http://joinmastodon.org/ns#",
+      "votersCount": "toot:votersCount",
+      "blurhash": "toot:blurhash",
+      "focalPoint": {
+        "@container": "@list",
+        "@id": "toot:focalPoint"
+      }
+    }
+  ],
+  "id": "https://friend.camp/users/darius/outbox?page=true",
+  "type": "OrderedCollectionPage",
+  "next": "https://friend.camp/users/darius/outbox?max_id=110578915247088767&page=true",
+  "prev": "https://friend.camp/users/darius/outbox?min_id=110595955047745784&page=true",
+  "partOf": "https://friend.camp/users/darius/outbox",
+  "orderedItems": [
+    {
+      "id": "https://friend.camp/users/darius/statuses/110595955047745784/activity",
+      "type": "Announce",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T22:45:49Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://weirder.earth/users/ghost_bird",
+        "https://friend.camp/users/darius/followers"
+      ],
+      "object": "https://weirder.earth/users/ghost_bird/statuses/110595002612766584"
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110595915911928586/activity",
+      "type": "Announce",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T22:35:52Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://mastodon.social/users/irenes",
+        "https://friend.camp/users/darius/followers"
+      ],
+      "object": "https://mastodon.social/users/irenes/statuses/110595912646904440"
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110595696838956142/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T21:40:09Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://friend.camp/users/darius/followers",
+        "https://xoxo.zone/users/danbruno"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110595696838956142",
+        "type": "Note",
+        "summary": "kiseki posting",
+        "inReplyTo": "https://xoxo.zone/users/danbruno/statuses/107769121889893959",
+        "published": "2023-06-23T21:40:09Z",
+        "url": "https://friend.camp/@darius/110595696838956142",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
+          "https://friend.camp/users/darius/followers",
+          "https://xoxo.zone/users/danbruno"
+        ],
+        "sensitive": true,
+        "atomUri": "https://friend.camp/users/darius/statuses/110595696838956142",
+        "inReplyToAtomUri": "https://xoxo.zone/users/danbruno/statuses/107769121889893959",
+        "conversation": "tag:friend.camp,2022-02-09:objectId=11108403:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://xoxo.zone/@danbruno\" class=\"u-url mention\">@<span>danbruno</span></a></span> ok random thread necromancy but... I saw this and had to send it to you</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://xoxo.zone/@danbruno\" class=\"u-url mention\">@<span>danbruno</span></a></span> ok random thread necromancy but... I saw this and had to send it to you</p>"
+        },
+        "attachment": [
+          {
+            "type": "Document",
+            "mediaType": "image/png",
+            "url": "https://friend.camp/system/media_attachments/files/110/595/696/632/679/432/original/5d6a65c97546fecc.png",
+            "name": null,
+            "blurhash": "UfM[yviw?^tlIojFozbb}]WpRPozOXXSofoL",
+            "width": 450,
+            "height": 898
+          }
+        ],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://xoxo.zone/users/danbruno",
+            "name": "@danbruno@xoxo.zone"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110595696838956142/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110595696838956142/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110595696838956142/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110595038089354977/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T18:52:37Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://alaskan.social/users/seachanger",
+        "https://mstdn.social/users/kissane",
+        "https://merveilles.town/users/lrhodes"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110595038089354977",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://merveilles.town/users/lrhodes/statuses/110595018157989838",
+        "published": "2023-06-23T18:52:37Z",
+        "url": "https://friend.camp/@darius/110595038089354977",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://alaskan.social/users/seachanger",
+          "https://mstdn.social/users/kissane",
+          "https://merveilles.town/users/lrhodes"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110595038089354977",
+        "inReplyToAtomUri": "https://merveilles.town/users/lrhodes/statuses/110595018157989838",
+        "conversation": "tag:alaskan.social,2023-06-23:objectId=217814:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://merveilles.town/@lrhodes\" class=\"u-url mention\">@<span>lrhodes</span></a></span> <span class=\"h-card\"><a href=\"https://mstdn.social/@kissane\" class=\"u-url mention\">@<span>kissane</span></a></span> <span class=\"h-card\"><a href=\"https://alaskan.social/@seachanger\" class=\"u-url mention\">@<span>seachanger</span></a></span> for me it&#39;s an operational security issue. Employees often send personal correspondence from their work email, and sometimes it bites people in the ass. I think we&#39;d see a similar problem for any nebulously defined employer fedi server but magnified since it&#39;s 1 to many communication by default. For 1 to many comms with an official org domain I think that stuff should be pretty limited to official comms channels. What I want is better verification of affiliation!</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://merveilles.town/@lrhodes\" class=\"u-url mention\">@<span>lrhodes</span></a></span> <span class=\"h-card\"><a href=\"https://mstdn.social/@kissane\" class=\"u-url mention\">@<span>kissane</span></a></span> <span class=\"h-card\"><a href=\"https://alaskan.social/@seachanger\" class=\"u-url mention\">@<span>seachanger</span></a></span> for me it&#39;s an operational security issue. Employees often send personal correspondence from their work email, and sometimes it bites people in the ass. I think we&#39;d see a similar problem for any nebulously defined employer fedi server but magnified since it&#39;s 1 to many communication by default. For 1 to many comms with an official org domain I think that stuff should be pretty limited to official comms channels. What I want is better verification of affiliation!</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://merveilles.town/users/lrhodes",
+            "name": "@lrhodes@merveilles.town"
+          },
+          {
+            "type": "Mention",
+            "href": "https://mstdn.social/users/kissane",
+            "name": "@kissane@mstdn.social"
+          },
+          {
+            "type": "Mention",
+            "href": "https://alaskan.social/users/seachanger",
+            "name": "@seachanger@alaskan.social"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110595038089354977/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110595038089354977/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110595038089354977/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110595005751467399/activity",
+      "type": "Announce",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T18:44:24Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://social.coop/users/natematias",
+        "https://friend.camp/users/darius/followers"
+      ],
+      "object": "https://social.coop/users/natematias/statuses/110594981715115520"
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110594849778908590/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T18:04:44Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://friend.camp/users/darius/followers",
+        "https://social.treehouse.systems/users/ariadne"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110594849778908590",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://social.treehouse.systems/users/ariadne/statuses/110594845637219949",
+        "published": "2023-06-23T18:04:44Z",
+        "url": "https://friend.camp/@darius/110594849778908590",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
+          "https://friend.camp/users/darius/followers",
+          "https://social.treehouse.systems/users/ariadne"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110594849778908590",
+        "inReplyToAtomUri": "https://social.treehouse.systems/users/ariadne/statuses/110594845637219949",
+        "conversation": "tag:treehouse.systems,2023-06-23:objectId=13227401:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://social.treehouse.systems/@ariadne\" class=\"u-url mention\">@<span>ariadne</span></a></span> harm considered harmful</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://social.treehouse.systems/@ariadne\" class=\"u-url mention\">@<span>ariadne</span></a></span> harm considered harmful</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://social.treehouse.systems/users/ariadne",
+            "name": "@ariadne@treehouse.systems"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110594849778908590/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110594849778908590/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110594849778908590/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110594420880968990/activity",
+      "type": "Announce",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T16:15:39Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://mastodon.social/users/kostyn",
+        "https://friend.camp/users/darius/followers"
+      ],
+      "object": "https://mastodon.social/users/kostyn/statuses/110593982023701408"
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110594076448252791/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T14:48:04Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://friend.camp/users/darius/followers",
+        "https://438punk.house/users/mart0",
+        "https://niagara.social/users/kostyn",
+        "https://mastodon.social/users/kostyn"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110594076448252791",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://mastodon.social/users/kostyn/statuses/110593982023701408",
+        "published": "2023-06-23T14:48:04Z",
+        "url": "https://friend.camp/@darius/110594076448252791",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
+          "https://friend.camp/users/darius/followers",
+          "https://438punk.house/users/mart0",
+          "https://niagara.social/users/kostyn",
+          "https://mastodon.social/users/kostyn"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110594076448252791",
+        "inReplyToAtomUri": "https://mastodon.social/users/kostyn/statuses/110593982023701408",
+        "conversation": "tag:mastodon.social,2023-06-23:objectId=473341884:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://mastodon.social/@kostyn\" class=\"u-url mention\">@<span>kostyn@mastodon.social</span></a></span> <span class=\"h-card\"><a href=\"https://niagara.social/@kostyn\" class=\"u-url mention\">@<span>kostyn@niagara.social</span></a></span> <span class=\"h-card\"><a href=\"https://438punk.house/@mart0\" class=\"u-url mention\">@<span>mart0</span></a></span> congrats!!</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://mastodon.social/@kostyn\" class=\"u-url mention\">@<span>kostyn@mastodon.social</span></a></span> <span class=\"h-card\"><a href=\"https://niagara.social/@kostyn\" class=\"u-url mention\">@<span>kostyn@niagara.social</span></a></span> <span class=\"h-card\"><a href=\"https://438punk.house/@mart0\" class=\"u-url mention\">@<span>mart0</span></a></span> congrats!!</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://mastodon.social/users/kostyn",
+            "name": "@kostyn@mastodon.social"
+          },
+          {
+            "type": "Mention",
+            "href": "https://niagara.social/users/kostyn",
+            "name": "@kostyn@niagara.social"
+          },
+          {
+            "type": "Mention",
+            "href": "https://438punk.house/users/mart0",
+            "name": "@mart0@438punk.house"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110594076448252791/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110594076448252791/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110594076448252791/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110592306492448890/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T07:17:56Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://scholar.social/users/davidschlangen"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110592306492448890",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://scholar.social/users/davidschlangen/statuses/110592295171379266",
+        "published": "2023-06-23T07:17:56Z",
+        "url": "https://friend.camp/@darius/110592306492448890",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://scholar.social/users/davidschlangen"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110592306492448890",
+        "inReplyToAtomUri": "https://scholar.social/users/davidschlangen/statuses/110592295171379266",
+        "conversation": "tag:scholar.social,2023-06-23:objectId=54854015:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://scholar.social/@davidschlangen\" class=\"u-url mention\">@<span>davidschlangen</span></a></span> ok I have to go</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://scholar.social/@davidschlangen\" class=\"u-url mention\">@<span>davidschlangen</span></a></span> ok I have to go</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://scholar.social/users/davidschlangen",
+            "name": "@davidschlangen@scholar.social"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110592306492448890/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110592306492448890/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110592306492448890/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110592296094541495/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T07:15:18Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://friend.camp/users/darius/followers",
+        "https://friend.camp/users/andypressman"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110592296094541495",
+        "type": "Note",
+        "summary": "movie question for movie people",
+        "inReplyTo": "https://friend.camp/users/andypressman/statuses/110590455418507896",
+        "published": "2023-06-23T07:15:18Z",
+        "url": "https://friend.camp/@darius/110592296094541495",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
+          "https://friend.camp/users/darius/followers",
+          "https://friend.camp/users/andypressman"
+        ],
+        "sensitive": true,
+        "atomUri": "https://friend.camp/users/darius/statuses/110592296094541495",
+        "inReplyToAtomUri": "https://friend.camp/users/andypressman/statuses/110590455418507896",
+        "conversation": "tag:friend.camp,2023-06-22:objectId=18313785:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://friend.camp/@andypressman\" class=\"u-url mention\">@<span>andypressman</span></a></span> Pee Wee&#39;s Big Adventure (directed by Tim Burton who was originally slated to direct After Hours!)</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://friend.camp/@andypressman\" class=\"u-url mention\">@<span>andypressman</span></a></span> Pee Wee&#39;s Big Adventure (directed by Tim Burton who was originally slated to direct After Hours!)</p>"
+        },
+        "updated": "2023-06-23T07:19:21Z",
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://friend.camp/users/andypressman",
+            "name": "@andypressman"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110592296094541495/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110592296094541495/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110592296094541495/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110591075933550217/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T02:04:59Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://hachyderm.io/users/skinnylatte"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110591075933550217",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://hachyderm.io/users/skinnylatte/statuses/110591073157682341",
+        "published": "2023-06-23T02:04:59Z",
+        "url": "https://friend.camp/@darius/110591075933550217",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://hachyderm.io/users/skinnylatte"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110591075933550217",
+        "inReplyToAtomUri": "https://hachyderm.io/users/skinnylatte/statuses/110591073157682341",
+        "conversation": "tag:hachyderm.io,2023-06-23:objectId=56808322:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://hachyderm.io/@skinnylatte\" class=\"u-url mention\">@<span>skinnylatte</span></a></span> oooh thank you! I have read about this technique but not tried it!</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://hachyderm.io/@skinnylatte\" class=\"u-url mention\">@<span>skinnylatte</span></a></span> oooh thank you! I have read about this technique but not tried it!</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://hachyderm.io/users/skinnylatte",
+            "name": "@skinnylatte@hachyderm.io"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110591075933550217/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110591075933550217/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110591075933550217/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110591061435672945/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T02:01:18Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://botsin.space/users/random_wiki"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110591061435672945",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://botsin.space/users/random_wiki/statuses/110591056828523529",
+        "published": "2023-06-23T02:01:18Z",
+        "url": "https://friend.camp/@darius/110591061435672945",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://botsin.space/users/random_wiki"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110591061435672945",
+        "inReplyToAtomUri": "https://botsin.space/users/random_wiki/statuses/110591056828523529",
+        "conversation": "tag:botsin.space,2023-06-23:objectId=80014177:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://botsin.space/@random_wiki\" class=\"u-url mention\">@<span>random_wiki</span></a></span> inventor of Chatgpt</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://botsin.space/@random_wiki\" class=\"u-url mention\">@<span>random_wiki</span></a></span> inventor of Chatgpt</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://botsin.space/users/random_wiki",
+            "name": "@random_wiki@botsin.space"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110591061435672945/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110591061435672945/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110591061435672945/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110591055962015404/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T01:59:55Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://friend.camp/users/darius/followers",
+        "https://hachyderm.io/users/skinnylatte"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110591055962015404",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://hachyderm.io/users/skinnylatte/statuses/110591033386464641",
+        "published": "2023-06-23T01:59:55Z",
+        "url": "https://friend.camp/@darius/110591055962015404",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
+          "https://friend.camp/users/darius/followers",
+          "https://hachyderm.io/users/skinnylatte"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110591055962015404",
+        "inReplyToAtomUri": "https://hachyderm.io/users/skinnylatte/statuses/110591033386464641",
+        "conversation": "tag:hachyderm.io,2023-06-23:objectId=56808322:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://hachyderm.io/@skinnylatte\" class=\"u-url mention\">@<span>skinnylatte</span></a></span> ooh, is the egg/rice thing like a tamago kake gohan where you beat a raw egg into hot rice? or do you cook the egg separate?</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://hachyderm.io/@skinnylatte\" class=\"u-url mention\">@<span>skinnylatte</span></a></span> ooh, is the egg/rice thing like a tamago kake gohan where you beat a raw egg into hot rice? or do you cook the egg separate?</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://hachyderm.io/users/skinnylatte",
+            "name": "@skinnylatte@hachyderm.io"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110591055962015404/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110591055962015404/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110591055962015404/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110590933610972210/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T01:28:48Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://thicc.horse/users/taq"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110590933610972210",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://thicc.horse/users/taq/statuses/110590926920060965",
+        "published": "2023-06-23T01:28:48Z",
+        "url": "https://friend.camp/@darius/110590933610972210",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://thicc.horse/users/taq"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110590933610972210",
+        "inReplyToAtomUri": "https://thicc.horse/users/taq/statuses/110590926920060965",
+        "conversation": "tag:thicc.horse,2023-06-23:objectId=25224524:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://thicc.horse/@taq\" class=\"u-url mention\">@<span>taq</span></a></span> &quot;oh I&#39;ll be wet? I&#39;d rather die&quot; is something that I think quite often. Do I bathe? of course. Do I enjoy it? nope</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://thicc.horse/@taq\" class=\"u-url mention\">@<span>taq</span></a></span> &quot;oh I&#39;ll be wet? I&#39;d rather die&quot; is something that I think quite often. Do I bathe? of course. Do I enjoy it? nope</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://thicc.horse/users/taq",
+            "name": "@taq@thicc.horse"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110590933610972210/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110590933610972210/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110590933610972210/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110590871383988246/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T01:12:58Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://friend.camp/users/darius/followers",
+        "https://mastodon.social/users/dansup"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110590871383988246",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://mastodon.social/users/dansup/statuses/110585755463038897",
+        "published": "2023-06-23T01:12:58Z",
+        "url": "https://friend.camp/@darius/110590871383988246",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
+          "https://friend.camp/users/darius/followers",
+          "https://mastodon.social/users/dansup"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110590871383988246",
+        "inReplyToAtomUri": "https://mastodon.social/users/dansup/statuses/110585755463038897",
+        "conversation": "tag:mastodon.social,2023-06-22:objectId=472428804:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://mastodon.social/@dansup\" class=\"u-url mention\">@<span>dansup</span></a></span> ooh this would be great to have</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://mastodon.social/@dansup\" class=\"u-url mention\">@<span>dansup</span></a></span> ooh this would be great to have</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://mastodon.social/users/dansup",
+            "name": "@dansup@mastodon.social"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110590871383988246/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110590871383988246/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110590871383988246/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110590863312243251/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-23T01:10:55Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://tenforward.social/users/elight",
+        "https://carhenge.club/users/nirak"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110590863312243251",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://carhenge.club/users/nirak/statuses/110589360779507322",
+        "published": "2023-06-23T01:10:55Z",
+        "url": "https://friend.camp/@darius/110590863312243251",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://tenforward.social/users/elight",
+          "https://carhenge.club/users/nirak"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110590863312243251",
+        "inReplyToAtomUri": "https://carhenge.club/users/nirak/statuses/110589360779507322",
+        "conversation": "tag:tenforward.social,2023-06-22:objectId=34771195:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://carhenge.club/@nirak\" class=\"u-url mention\">@<span>nirak</span></a></span> <span class=\"h-card\"><a href=\"https://tenforward.social/@elight\" class=\"u-url mention\">@<span>elight</span></a></span> similar job board, of course caveats apply: <a href=\"https://www.digitalrights.community/job-board\" target=\"_blank\" rel=\"nofollow noopener noreferrer\"><span class=\"invisible\">https://www.</span><span class=\"ellipsis\">digitalrights.community/job-bo</span><span class=\"invisible\">ard</span></a></p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://carhenge.club/@nirak\" class=\"u-url mention\">@<span>nirak</span></a></span> <span class=\"h-card\"><a href=\"https://tenforward.social/@elight\" class=\"u-url mention\">@<span>elight</span></a></span> similar job board, of course caveats apply: <a href=\"https://www.digitalrights.community/job-board\" target=\"_blank\" rel=\"nofollow noopener noreferrer\"><span class=\"invisible\">https://www.</span><span class=\"ellipsis\">digitalrights.community/job-bo</span><span class=\"invisible\">ard</span></a></p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://carhenge.club/users/nirak",
+            "name": "@nirak@carhenge.club"
+          },
+          {
+            "type": "Mention",
+            "href": "https://tenforward.social/users/elight",
+            "name": "@elight@tenforward.social"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110590863312243251/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110590863312243251/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110590863312243251/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110588457997892022/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-22T14:59:13Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://eldritch.cafe/users/melunaka"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110588457997892022",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://eldritch.cafe/users/melunaka/statuses/110587523885859507",
+        "published": "2023-06-22T14:59:13Z",
+        "url": "https://friend.camp/@darius/110588457997892022",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://eldritch.cafe/users/melunaka"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110588457997892022",
+        "inReplyToAtomUri": "https://eldritch.cafe/users/melunaka/statuses/110587523885859507",
+        "conversation": "tag:friend.camp,2023-06-20:objectId=18265414:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://eldritch.cafe/@melunaka\" class=\"u-url mention\">@<span>melunaka</span></a></span> the quote is prepended with &quot;functionally&quot; so the understanding is it is a paraphrase rather than a direct quote</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://eldritch.cafe/@melunaka\" class=\"u-url mention\">@<span>melunaka</span></a></span> the quote is prepended with &quot;functionally&quot; so the understanding is it is a paraphrase rather than a direct quote</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://eldritch.cafe/users/melunaka",
+            "name": "@melunaka@eldritch.cafe"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110588457997892022/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110588457997892022/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110588457997892022/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110588443380578388/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-22T14:55:30Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://friend.camp/users/darius/followers",
+        "https://hachyderm.io/users/kaush"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110588443380578388",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://hachyderm.io/users/kaush/statuses/110588436262159833",
+        "published": "2023-06-22T14:55:30Z",
+        "url": "https://friend.camp/@darius/110588443380578388",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
+          "https://friend.camp/users/darius/followers",
+          "https://hachyderm.io/users/kaush"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110588443380578388",
+        "inReplyToAtomUri": "https://hachyderm.io/users/kaush/statuses/110588436262159833",
+        "conversation": "tag:friend.camp,2023-06-20:objectId=18265414:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://hachyderm.io/@kaush\" class=\"u-url mention\">@<span>kaush</span></a></span> it&#39;s a Pixel 6a and yes the pixel gets the newest Android versions as early as possible, and with no bloatware</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://hachyderm.io/@kaush\" class=\"u-url mention\">@<span>kaush</span></a></span> it&#39;s a Pixel 6a and yes the pixel gets the newest Android versions as early as possible, and with no bloatware</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://hachyderm.io/users/kaush",
+            "name": "@kaush@hachyderm.io"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110588443380578388/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110588443380578388/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110588443380578388/replies",
+            "items": []
+          }
+        }
+      }
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110584256370216397/activity",
+      "type": "Announce",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-21T21:10:41Z",
+      "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "cc": [
+        "https://mastodon.social/users/esther_alter",
+        "https://friend.camp/users/darius/followers"
+      ],
+      "object": "https://mastodon.social/users/esther_alter/statuses/110584224989890991"
+    },
+    {
+      "id": "https://friend.camp/users/darius/statuses/110578915247088767/activity",
+      "type": "Create",
+      "actor": "https://friend.camp/users/darius",
+      "published": "2023-06-20T22:32:22Z",
+      "to": [
+        "https://friend.camp/users/darius/followers"
+      ],
+      "cc": [
+        "https://www.w3.org/ns/activitystreams#Public",
+        "https://social.coop/users/datatitian"
+      ],
+      "object": {
+        "id": "https://friend.camp/users/darius/statuses/110578915247088767",
+        "type": "Note",
+        "summary": null,
+        "inReplyTo": "https://social.coop/users/datatitian/statuses/110578912255466853",
+        "published": "2023-06-20T22:32:22Z",
+        "url": "https://friend.camp/@darius/110578915247088767",
+        "attributedTo": "https://friend.camp/users/darius",
+        "to": [
+          "https://friend.camp/users/darius/followers"
+        ],
+        "cc": [
+          "https://www.w3.org/ns/activitystreams#Public",
+          "https://social.coop/users/datatitian"
+        ],
+        "sensitive": false,
+        "atomUri": "https://friend.camp/users/darius/statuses/110578915247088767",
+        "inReplyToAtomUri": "https://social.coop/users/datatitian/statuses/110578912255466853",
+        "conversation": "tag:friend.camp,2023-06-20:objectId=18265414:objectType=Conversation",
+        "localOnly": false,
+        "content": "<p><span class=\"h-card\"><a href=\"https://social.coop/@datatitian\" class=\"u-url mention\">@<span>datatitian</span></a></span> it&#39;s mostly native apps that have proven difficult!</p>",
+        "contentMap": {
+          "en": "<p><span class=\"h-card\"><a href=\"https://social.coop/@datatitian\" class=\"u-url mention\">@<span>datatitian</span></a></span> it&#39;s mostly native apps that have proven difficult!</p>"
+        },
+        "attachment": [],
+        "tag": [
+          {
+            "type": "Mention",
+            "href": "https://social.coop/users/datatitian",
+            "name": "@datatitian@social.coop"
+          }
+        ],
+        "replies": {
+          "id": "https://friend.camp/users/darius/statuses/110578915247088767/replies",
+          "type": "Collection",
+          "first": {
+            "type": "CollectionPage",
+            "next": "https://friend.camp/users/darius/statuses/110578915247088767/replies?only_other_accounts=true&page=true",
+            "partOf": "https://friend.camp/users/darius/statuses/110578915247088767/replies",
+            "items": []
+          }
+        }
+      }
+    }
+  ]
+}

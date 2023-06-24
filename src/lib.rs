@@ -1,5 +1,8 @@
 use std::{collections::HashMap, fmt::Display};
 
+#[cfg(feature = "reqwest")]
+pub mod network;
+
 #[derive(Debug)]
 pub enum Error {
     InvalidContext,
@@ -109,6 +112,59 @@ impl<T> NonFunctional<T> {
     pub fn is_none(&self) -> bool {
         matches!(self, NonFunctional::None)
     }
+
+    pub fn iter(&self) -> NonFunctionalIter<'_, T> {
+        NonFunctionalIter {
+            non_functional: self,
+            index: 0,
+        }
+    }
+
+    pub fn iter_mut(&mut self) -> NonFunctionalIterMut<'_, T> {
+        NonFunctionalIterMut {
+            non_functional: self,
+            index: 0,
+        }
+    }
+}
+
+pub struct NonFunctionalIter<'a, T> {
+    non_functional: &'a NonFunctional<T>,
+    index: usize,
+}
+
+impl<'a, T> Iterator for NonFunctionalIter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = match self.non_functional {
+            NonFunctional::One(one) if self.index == 0 => one,
+            NonFunctional::Many(many) => many.get(self.index)?,
+            _ => return None,
+        };
+        self.index += 1;
+        Some(next)
+    }
+}
+
+pub struct NonFunctionalIterMut<'a, T> {
+    non_functional: &'a mut NonFunctional<T>,
+    index: usize,
+}
+
+impl<'a, T> Iterator for NonFunctionalIterMut<'a, T> {
+    type Item = &'a mut T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = match self.non_functional {
+            NonFunctional::One(one) if self.index == 0 => one,
+            NonFunctional::Many(many) => many.get_mut(self.index)?,
+            _ => return None,
+        };
+        self.index += 1;
+        // SAFETY: uuuhhhhhhhh,,,,
+        Some(unsafe { std::mem::transmute::<&mut T, &mut T>(next) })
+    }
 }
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
@@ -183,6 +239,8 @@ pub struct Object {
     #[serde(skip_serializing_if = "NonFunctional::is_none")]
     pub items: NonFunctional<LinkObject>,
     #[serde(skip_serializing_if = "NonFunctional::is_none")]
+    pub ordered_items: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")]
     pub one_of: NonFunctional<LinkObject>,
     #[serde(skip_serializing_if = "NonFunctional::is_none")]
     pub any_of: NonFunctional<LinkObject>,
@@ -200,8 +258,8 @@ pub struct Object {
     pub preview: NonFunctional<LinkObject>,
     #[serde(skip_serializing_if = "NonFunctional::is_none")]
     pub result: NonFunctional<LinkObject>,
-    #[serde(default = "Vec::new", skip_serializing_if = "Vec::is_empty")]
-    pub replies: Vec<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")]
+    pub replies: NonFunctional<LinkObject>,
     #[serde(skip_serializing_if = "NonFunctional::is_none")]
     pub tag: NonFunctional<LinkObject>,
     #[serde(skip_serializing_if = "NonFunctional::is_none")]
@@ -311,6 +369,7 @@ impl Default for Object {
             last: None,
             location: NonFunctional::None,
             items: NonFunctional::None,
+            ordered_items: NonFunctional::None,
             one_of: NonFunctional::None,
             any_of: NonFunctional::None,
             closed: None,
@@ -320,7 +379,7 @@ impl Default for Object {
             prev: None,
             preview: NonFunctional::None,
             result: NonFunctional::None,
-            replies: Vec::with_capacity(0),
+            replies: NonFunctional::None,
             tag: NonFunctional::None,
             target: NonFunctional::None,
             to: NonFunctional::None,

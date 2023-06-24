@@ -10,7 +10,6 @@ for rust
 - serde
     - parsing in a nice way that gracefully handles broken stuff
 - networking (dereferencing JSON-LD links)
-    - how is serde gonna work?
 
 ```rust
 // im imagining an api sorta like this
@@ -25,8 +24,6 @@ reqwest::get(url)
 
 ## parts that are currently out-of-spec
 
-- "Functional" properties
-    - a really stupid name for properties that can have multiple values
 - a bunch of property types
     - closer now but still some stuff like datetime, language tags, duration,
       units, rel, @context need to be corrected
