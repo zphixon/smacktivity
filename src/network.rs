@@ -1,33 +1,6 @@
 use crate::{LinkObject, NonFunctional, Object};
 use reqwest as request;
 
-//#[macro_export]
-//macro_rules! resolve_all {
-//    ($property:expr) => {{
-//        let nf: &mut $crate::NonFunctional<_> = &mut $property;
-//        match nf {
-//            $crate::NonFunctional::None => {
-//                Result::<_, Box<dyn ::std::error::Error>>::Ok($crate::NonFunctional::None)
-//            }
-//            $crate::NonFunctional::One(one) => Ok($crate::NonFunctional::One(one.resolve().await?)),
-//            $crate::NonFunctional::Many(many) => Ok($crate::NonFunctional::Many(
-//                ::futures::future::try_join_all(many.iter_mut().map(|one| one.resolve())).await?,
-//            )),
-//        }
-//    }};
-//}
-//
-//#[macro_export]
-//macro_rules! resolve_maybe {
-//    ($property:expr) => {{
-//        let maybe: &mut Option<_> = &mut $property;
-//        match maybe {
-//            None => Result::<_, Box<dyn ::std::error::Error>>::Ok(None),
-//            Some(some) => Ok(Some(some.resolve().await?)),
-//        }
-//    }};
-//}
-
 pub async fn request_object(url: impl AsRef<str>) -> Result<Object, Box<dyn std::error::Error>> {
     let client = request::Client::new();
     Ok(client
@@ -42,25 +15,45 @@ pub async fn request_object(url: impl AsRef<str>) -> Result<Object, Box<dyn std:
         .await?)
 }
 
+impl LinkObject {
+    pub async fn resolved(&mut self) -> Result<&mut Object, Box<dyn std::error::Error>> {
+            #[derive(Debug)]
+            struct ResolvedError(String);
+            impl std::error::Error for ResolvedError {}
+            impl std::fmt::Display for ResolvedError {
+                fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                    write!(f, "calling LinkObject::resolved(): {}", self.0)
+                }
+            }
+
+            self.resolve().await?;
+            match self {
+                LinkObject::Object(object) => Ok(object),
+                LinkObject::Url(url) => Err(ResolvedError(format!(
+                    "called resolve but wasn't resolved ({})",
+                    url
+                ))
+                .into()),
+            }
+    }
+}
+
+pub type ResolveOutput = Result<(), Box<dyn std::error::Error>>;
+
 pub trait Resolve {
-    type Output;
     fn resolve<'this>(
         &'this mut self,
-    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Self::Output> + 'this>>;
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = ResolveOutput> + 'this>>;
 }
 
 impl Resolve for LinkObject {
-    type Output = Result<(), Box<dyn std::error::Error>>;
-
     fn resolve<'this>(
         &'this mut self,
-    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Self::Output> + 'this>> {
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = ResolveOutput> + 'this>> {
         Box::pin(async move {
             tracing::debug!("resolve {}", std::any::type_name::<Self>());
             match self {
-                LinkObject::Object(_) => {
-                    Ok(())
-                }
+                LinkObject::Object(_) => Ok(()),
                 LinkObject::Url(url) => {
                     *self = LinkObject::Object(Box::new(request_object(url).await?));
                     Ok(())
@@ -70,15 +63,13 @@ impl Resolve for LinkObject {
     }
 }
 
-impl<T, Ok, Err> Resolve for Option<T>
+impl<T> Resolve for Option<T>
 where
-    T: Resolve<Output = Result<Ok, Err>>,
+    T: Resolve,
 {
-    type Output = Result<(), Err>;
-
     fn resolve<'this>(
         &'this mut self,
-    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Self::Output> + 'this>> {
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = ResolveOutput> + 'this>> {
         Box::pin(async move {
             tracing::debug!("resolve {}", std::any::type_name::<Self>());
             match self {
@@ -92,15 +83,13 @@ where
     }
 }
 
-impl<T, Ok, Err> Resolve for NonFunctional<T>
+impl<T> Resolve for NonFunctional<T>
 where
-    T: Resolve<Output = Result<Ok, Err>>,
+    T: Resolve,
 {
-    type Output = Result<(), Err>;
-
     fn resolve<'this>(
         &'this mut self,
-    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Self::Output> + 'this>> {
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = ResolveOutput> + 'this>> {
         Box::pin(async move {
             tracing::debug!("resolve {}", std::any::type_name::<Self>());
             match self {

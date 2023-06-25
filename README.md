@@ -9,7 +9,9 @@ for rust
 - get in spec
 - serde
     - parsing in a nice way that gracefully handles broken stuff
-- networking (dereferencing JSON-LD links)
+- security-related stuff
+    - signatures for mastodon
+    - certainly more
 
 ```rust
 // im imagining an api sorta like this

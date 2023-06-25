@@ -1,0 +1,68 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    {
+      "ostatus": "http://ostatus.org#",
+      "atomUri": "ostatus:atomUri",
+      "inReplyToAtomUri": "ostatus:inReplyToAtomUri",
+      "conversation": "ostatus:conversation",
+      "sensitive": "as:sensitive",
+      "toot": "http://joinmastodon.org/ns#",
+      "votersCount": "toot:votersCount"
+    }
+  ],
+  "id": "https://friend.camp/users/darius/statuses/110592306492448890/activity",
+  "type": "Create",
+  "actor": "https://friend.camp/users/darius",
+  "published": "2023-06-23T07:17:56Z",
+  "to": [
+    "https://friend.camp/users/darius/followers"
+  ],
+  "cc": [
+    "https://www.w3.org/ns/activitystreams#Public",
+    "https://scholar.social/users/davidschlangen"
+  ],
+  "object": {
+    "id": "https://friend.camp/users/darius/statuses/110592306492448890",
+    "type": "Note",
+    "summary": null,
+    "inReplyTo": "https://scholar.social/users/davidschlangen/statuses/110592295171379266",
+    "published": "2023-06-23T07:17:56Z",
+    "url": "https://friend.camp/@darius/110592306492448890",
+    "attributedTo": "https://friend.camp/users/darius",
+    "to": [
+      "https://friend.camp/users/darius/followers"
+    ],
+    "cc": [
+      "https://www.w3.org/ns/activitystreams#Public",
+      "https://scholar.social/users/davidschlangen"
+    ],
+    "sensitive": false,
+    "atomUri": "https://friend.camp/users/darius/statuses/110592306492448890",
+    "inReplyToAtomUri": "https://scholar.social/users/davidschlangen/statuses/110592295171379266",
+    "conversation": "tag:scholar.social,2023-06-23:objectId=54854015:objectType=Conversation",
+    "localOnly": false,
+    "content": "<p><span class=\"h-card\"><a href=\"https://scholar.social/@davidschlangen\" class=\"u-url mention\">@<span>davidschlangen</span></a></span> ok I have to go</p>",
+    "contentMap": {
+      "en": "<p><span class=\"h-card\"><a href=\"https://scholar.social/@davidschlangen\" class=\"u-url mention\">@<span>davidschlangen</span></a></span> ok I have to go</p>"
+    },
+    "attachment": [],
+    "tag": [
+      {
+        "type": "Mention",
+        "href": "https://scholar.social/users/davidschlangen",
+        "name": "@davidschlangen@scholar.social"
+      }
+    ],
+    "replies": {
+      "id": "https://friend.camp/users/darius/statuses/110592306492448890/replies",
+      "type": "Collection",
+      "first": {
+        "type": "CollectionPage",
+        "next": "https://friend.camp/users/darius/statuses/110592306492448890/replies?only_other_accounts=true&page=true",
+        "partOf": "https://friend.camp/users/darius/statuses/110592306492448890/replies",
+        "items": []
+      }
+    }
+  }
+}
