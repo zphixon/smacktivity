@@ -6,28 +6,28 @@ for rust
 
 ## TODO
 
-- get in spec
-- serde
-    - parsing in a nice way that gracefully handles broken stuff
-- security-related stuff
-    - signatures for mastodon
-    - certainly more
-
-```rust
-// im imagining an api sorta like this
-reqwest::get(url)
-    .await?
-    .json::<Object>()
-    .await?
-    .resolve() // maybe choose what network provider here?
-    .await?;
-```
-
-
-## parts that are currently out-of-spec
-
-- a bunch of property types
-    - closer now but still some stuff like datetime, language tags, duration,
-      units, rel, @context need to be corrected
-- object hierarchy
+- [ ] json-ld stuff
+    - [X] read @context
+    - [ ] verify @context (see https://www.w3.org/ns/activitystreams#h-introduction)
+    - [ ] extra contexts on objects
+- [ ] better object properties
+    - [ ] contentMap (rdf:langString)
+    - [ ] nameMap (rdf:langString)
+    - [ ] duration (xsd:duration type)
+    - [ ] hreflang (BCP47 https://lib.rs/crates/language-tags)
+    - [ ] end_time (xsd:dateTime)
+    - [ ] published (xsd:dateTime)
+    - [ ] start_time (xsd:dateTime)
+    - [ ] rel (RFC5988 https://datatracker.ietf.org/doc/html/rfc5988)
+    - [ ] summaryMap (rdf:langString)
+    - [ ] units (string enum https://www.w3.org/TR/activitystreams-vocabulary/#dfn-units)
+    - [ ] updated (xsd:dateTime)
+    - [ ] deleted (xsd:dateTime)
+- [ ] object hierarchy?
     - probably won't do this one. doesn't seem super useful for implementors.
+- [ ] security
+    - [ ] HTTP Signature in requests (https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures)
+    - [ ] Digest header
+    - [ ] UI authentication
+    - [ ] publicKey property (https://w3c-ccg.github.io/security-vocab/#publicKey)
+- [ ] webfinger (https://datatracker.ietf.org/doc/html/rfc7033)
