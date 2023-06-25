@@ -1,8 +1,5 @@
 use std::{collections::HashMap, fmt::Display};
 
-#[cfg(feature = "reqwest")]
-pub mod network;
-
 #[derive(Debug)]
 pub enum Error {
     InvalidContext,

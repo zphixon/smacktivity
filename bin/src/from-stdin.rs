@@ -18,6 +18,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut object = serde_json::from_reader::<_, smacktivity::Object>(std::io::stdin())?;
 
+    use smacktivity_network::Resolved;
+
     if let Some(property) = args.resolve.as_ref() {
         match property.as_str().to_snake_case().as_str() {
             "actor" => {

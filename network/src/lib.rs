@@ -1,5 +1,5 @@
-use crate::{LinkObject, NonFunctional, Object};
 use reqwest as request;
+use smacktivity::{LinkObject, NonFunctional, Object};
 
 pub async fn request_object(url: impl AsRef<str>) -> Result<Object, Box<dyn std::error::Error>> {
     let client = request::Client::new();
@@ -15,8 +15,29 @@ pub async fn request_object(url: impl AsRef<str>) -> Result<Object, Box<dyn std:
         .await?)
 }
 
-impl LinkObject {
-    pub async fn resolved(&mut self) -> Result<&mut Object, Box<dyn std::error::Error>> {
+pub trait Resolved {
+    fn resolved<'this>(
+        &'this mut self,
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<
+                    Output = Result<&'this mut Box<Object>, Box<dyn std::error::Error>>,
+                > + 'this,
+        >,
+    >;
+}
+
+impl Resolved for LinkObject {
+    fn resolved<'this>(
+        &'this mut self,
+    ) -> std::pin::Pin<
+        Box<
+            dyn std::future::Future<
+                    Output = Result<&'this mut Box<Object>, Box<dyn std::error::Error>>,
+                > + 'this,
+        >,
+    > {
+        Box::pin(async move {
             #[derive(Debug)]
             struct ResolvedError(String);
             impl std::error::Error for ResolvedError {}
@@ -35,6 +56,7 @@ impl LinkObject {
                 ))
                 .into()),
             }
+        })
     }
 }
 
