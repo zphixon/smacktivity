@@ -21,7 +21,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     use smacktivity_network::Resolved;
 
     if let Some(property) = args.resolve.as_ref() {
-        match property.as_str().to_snake_case().as_str() {
+        match property.to_snake_case().as_str() {
             "actor" => {
                 for actor in object.actor.iter_mut() {
                     let actor = actor.resolved().await?;

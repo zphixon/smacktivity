@@ -1,19 +1,5 @@
-use std::{collections::HashMap, fmt::Display};
-
-#[derive(Debug)]
-pub enum Error {
-    InvalidContext,
-}
-
-impl Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Error::InvalidContext => f.debug_struct("InvalidContext").finish(),
-        }
-    }
-}
-
-pub const ACTIVITYSTREAMS_CONTEXT: &str = "https://www.w3.org/ns/activitystreams";
+use std::collections::HashMap;
+use url::Url;
 
 #[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub enum ActivityStreamsType {
@@ -81,10 +67,12 @@ pub enum ActivityStreamsType {
     Mention,
 }
 
+pub const ACTIVITYSTREAMS_CONTEXT: &str = "https://www.w3.org/ns/activitystreams";
+
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(untagged)]
 pub enum ActivityStreamsContext {
-    Url(url::Url),
+    Url(Url),
     String(String),
     Map(HashMap<String, ActivityStreamsContext>),
     List(Vec<ActivityStreamsContext>),
@@ -92,7 +80,7 @@ pub enum ActivityStreamsContext {
 
 impl Default for ActivityStreamsContext {
     fn default() -> Self {
-        ActivityStreamsContext::Url(url::Url::parse(ACTIVITYSTREAMS_CONTEXT).unwrap())
+        ActivityStreamsContext::Url(Url::parse(ACTIVITYSTREAMS_CONTEXT).unwrap())
     }
 }
 
@@ -132,7 +120,7 @@ impl<T> NonFunctional<T> {
         }
     }
 
-    pub fn iter_mut(&mut self) -> NonFunctionalIterMut<'_, T> {
+    pub fn iter_mut<'this>(&'this mut self) -> NonFunctionalIterMut<'this, T> {
         NonFunctionalIterMut {
             non_functional: self,
             index: 0,
@@ -140,13 +128,13 @@ impl<T> NonFunctional<T> {
     }
 }
 
-pub struct NonFunctionalIter<'a, T> {
-    non_functional: &'a NonFunctional<T>,
+pub struct NonFunctionalIter<'nf, T> {
+    non_functional: &'nf NonFunctional<T>,
     index: usize,
 }
 
-impl<'a, T> Iterator for NonFunctionalIter<'a, T> {
-    type Item = &'a T;
+impl<'nf, T> Iterator for NonFunctionalIter<'nf, T> {
+    type Item = &'nf T;
 
     fn next(&mut self) -> Option<Self::Item> {
         let next = match self.non_functional {
@@ -159,23 +147,30 @@ impl<'a, T> Iterator for NonFunctionalIter<'a, T> {
     }
 }
 
-pub struct NonFunctionalIterMut<'a, T> {
-    non_functional: &'a mut NonFunctional<T>,
+pub struct NonFunctionalIterMut<'nf, T> {
+    non_functional: &'nf mut NonFunctional<T>,
     index: usize,
 }
 
-impl<'a, T> Iterator for NonFunctionalIterMut<'a, T> {
-    type Item = &'a mut T;
+impl<'nf, T> Iterator for NonFunctionalIterMut<'nf, T> {
+    type Item = &'nf mut T;
 
     fn next(&mut self) -> Option<Self::Item> {
         let next = match self.non_functional {
-            NonFunctional::One(one) if self.index == 0 => one,
-            NonFunctional::Many(many) => many.get_mut(self.index)?,
+            NonFunctional::One(one) if self.index == 0 => one as *mut T,
+            NonFunctional::Many(many) => many.get_mut(self.index)? as *mut T,
             _ => return None,
         };
         self.index += 1;
-        // SAFETY: uuuhhhhhhhh,,,,
-        Some(unsafe { std::mem::transmute::<&mut T, &mut T>(next) })
+
+        // SAFETY:
+        // - `next` points to a valid T
+        // - The lifetime 'nf is equal to 'this from NonFunctional::iter_mut
+        // - The lifetime of &mut self is irrelevant, since we are borrowing
+        //   from `self.non_functional` with lifetime 'nf rather than self
+        // - It is not possible to obtain multiple NonFunctionalIterMuts from a
+        //   single NonFunctional
+        Some(unsafe { &mut *next })
     }
 }
 
@@ -190,18 +185,18 @@ pub enum ClosedProperty {
 #[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default, rename_all = "camelCase")]
 pub struct EndpointsProperty {
-    proxy_url: Option<url::Url>,
-    oauth_authorization_endpoint: Option<url::Url>,
-    oauth_token_endpoint: Option<url::Url>,
-    provide_client_key: Option<url::Url>,
-    sign_client_key: Option<url::Url>,
-    shared_inbox: Option<url::Url>,
+    proxy_url: Option<Url>,
+    oauth_authorization_endpoint: Option<Url>,
+    oauth_token_endpoint: Option<Url>,
+    provide_client_key: Option<Url>,
+    sign_client_key: Option<Url>,
+    shared_inbox: Option<Url>,
 }
 
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(untagged)]
 pub enum LinkObject {
-    Url(url::Url),
+    Url(Url),
     Object(Box<Object>),
 }
 
@@ -223,156 +218,87 @@ impl std::fmt::Debug for LinkObject {
     }
 }
 
+#[rustfmt::skip]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(default, rename_all = "camelCase")]
 pub struct Object {
     #[serde(rename = "@context")]
     pub schema_context: ActivityStreamsContext,
+
     #[serde(rename = "type")]
     pub type_: ActivityStreamsType,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<url::Url>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub actor: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub attachment: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub attributed_to: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub audience: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub bcc: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub bto: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub cc: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub context: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub current: Option<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub first: Option<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub generator: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub icon: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub image: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub in_reply_to: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub instrument: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub last: Option<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub location: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub items: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub ordered_items: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub one_of: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub any_of: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub closed: Option<ClosedProperty>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub origin: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub next: Option<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub object: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub prev: Option<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub preview: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub result: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub replies: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub tag: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub target: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub to: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub url: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub accuracy: Option<f32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub altitude: Option<f32>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub content: NonFunctional<String>, // TODO - langString/contentMap?
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub name: NonFunctional<String>, // TODO - langString/nameMap?
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub duration: Option<String>, // TODO - duration
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub height: Option<u32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub href: Option<url::Url>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub hreflang: Option<String>, // TODO - language tag
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub part_of: Option<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub latitude: Option<f32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub longitude: Option<f32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub media_type: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub end_time: Option<String>, // TODO - dateTime
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub published: Option<String>, // TODO - dateTime
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub start_time: Option<String>, // TODO - dateTime
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub radius: Option<f32>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub rel: NonFunctional<String>, // TODO - RFC5988/HTML5 Link Relation?
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub start_index: Option<u32>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub summary: NonFunctional<String>, // TODO - langString/summaryMap?
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub total_items: Option<u32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub units: Option<String>, // TODO - string enum
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub updated: Option<String>, // TODO - dateTime
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub width: Option<u32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub subject: Option<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub relationship: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub describes: Option<Box<Object>>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub former_type: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub deleted: Option<String>, // TODO - dateTime
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub source: Option<Box<Object>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub inbox: Option<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub outbox: Option<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub following: Option<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub followers: Option<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub liked: Option<LinkObject>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")]
-    pub streams: NonFunctional<LinkObject>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub endpoints: Option<EndpointsProperty>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub preferred_username: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub id: Option<Url>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub actor: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub attachment: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub attributed_to: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub audience: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub bcc: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub bto: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub cc: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub context: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub current: Option<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub first: Option<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub generator: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub icon: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub image: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub in_reply_to: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub instrument: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub last: Option<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub location: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub items: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub ordered_items: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub one_of: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub any_of: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub closed: Option<ClosedProperty>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub origin: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub next: Option<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub object: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub prev: Option<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub preview: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub result: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub replies: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub tag: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub target: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub to: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub url: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub accuracy: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub altitude: Option<f32>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub content: NonFunctional<String>, // TODO - langString/contentMap?
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub name: NonFunctional<String>, // TODO - langString/nameMap?
+    #[serde(skip_serializing_if = "Option::is_none")]        pub duration: Option<String>, // TODO - duration
+    #[serde(skip_serializing_if = "Option::is_none")]        pub height: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub href: Option<Url>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub hreflang: Option<String>, // TODO - language tag
+    #[serde(skip_serializing_if = "Option::is_none")]        pub part_of: Option<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub latitude: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub longitude: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub media_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub end_time: Option<String>, // TODO - dateTime
+    #[serde(skip_serializing_if = "Option::is_none")]        pub published: Option<String>, // TODO - dateTime
+    #[serde(skip_serializing_if = "Option::is_none")]        pub start_time: Option<String>, // TODO - dateTime
+    #[serde(skip_serializing_if = "Option::is_none")]        pub radius: Option<f32>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub rel: NonFunctional<String>, // TODO - RFC5988/HTML5 Link Relation?
+    #[serde(skip_serializing_if = "Option::is_none")]        pub start_index: Option<u32>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub summary: NonFunctional<String>, // TODO - langString/summaryMap?
+    #[serde(skip_serializing_if = "Option::is_none")]        pub total_items: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub units: Option<String>, // TODO - string enum
+    #[serde(skip_serializing_if = "Option::is_none")]        pub updated: Option<String>, // TODO - dateTime
+    #[serde(skip_serializing_if = "Option::is_none")]        pub width: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub subject: Option<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub relationship: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub describes: Option<Box<Object>>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub former_type: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub deleted: Option<String>, // TODO - dateTime
+    #[serde(skip_serializing_if = "Option::is_none")]        pub source: Option<Box<Object>>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub inbox: Option<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub outbox: Option<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub following: Option<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub followers: Option<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub liked: Option<LinkObject>,
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub streams: NonFunctional<LinkObject>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub endpoints: Option<EndpointsProperty>,
+    #[serde(skip_serializing_if = "Option::is_none")]        pub preferred_username: Option<String>,
 
     #[serde(flatten)]
     pub rest: HashMap<String, serde_json::Value>,
