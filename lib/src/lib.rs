@@ -218,6 +218,99 @@ impl std::fmt::Debug for LinkObject {
     }
 }
 
+#[derive(serde::Serialize, serde::Deserialize, Clone, Copy, Debug)]
+#[serde(rename_all = "kebab-case")]
+pub enum LinkRelation {
+    Alternate,
+    Canonical,
+    Author,
+    Bookmark,
+    DnsPrefetch,
+    External,
+    Help,
+    Icon,
+    Manifest,
+    Modulepreload,
+    License,
+    Next,
+    Nofollow,
+    Noopener,
+    Noreferrer,
+    Opener,
+    Pingback,
+    Preconnect,
+    Prefetch,
+    Preload,
+    Prev,
+    Search,
+    Stylesheet,
+    Tag,
+}
+
+#[derive(Debug)]
+pub enum Units {
+    Cm,
+    Feet,
+    Inches,
+    Km,
+    M,
+    Miles,
+    Url(Url),
+}
+
+impl serde::Serialize for Units {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            Units::Cm => serializer.serialize_str("cm"),
+            Units::Feet => serializer.serialize_str("feet"),
+            Units::Inches => serializer.serialize_str("inches"),
+            Units::Km => serializer.serialize_str("km"),
+            Units::M => serializer.serialize_str("m"),
+            Units::Miles => serializer.serialize_str("miles"),
+            Units::Url(url) => url.serialize(serializer),
+        }
+    }
+}
+
+impl<'de> serde::Deserialize<'de> for Units {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct UnitsVisitor;
+        impl<'de> serde::de::Visitor<'de> for UnitsVisitor {
+            type Value = Units;
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                write!(formatter, "Unit or URL")
+            }
+
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                if let Ok(url) = Url::parse(v) {
+                    return Ok(Units::Url(url));
+                }
+
+                match v {
+                    "cm" => Ok(Units::Cm),
+                    "feet" => Ok(Units::Feet),
+                    "inches" => Ok(Units::Inches),
+                    "km" => Ok(Units::Km),
+                    "m" => Ok(Units::M),
+                    "miles" => Ok(Units::Miles),
+                    _ => Err(serde::de::Error::custom(format!("unknown unit {}", v))),
+                }
+            }
+        }
+
+        deserializer.deserialize_str(UnitsVisitor)
+    }
+}
+
 #[rustfmt::skip]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(default, rename_all = "camelCase")]
@@ -278,11 +371,11 @@ pub struct Object {
     #[serde(skip_serializing_if = "Option::is_none")]        pub published: Option<String>, // TODO - dateTime
     #[serde(skip_serializing_if = "Option::is_none")]        pub start_time: Option<String>, // TODO - dateTime
     #[serde(skip_serializing_if = "Option::is_none")]        pub radius: Option<f32>,
-    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub rel: NonFunctional<String>, // TODO - RFC5988/HTML5 Link Relation?
+    #[serde(skip_serializing_if = "NonFunctional::is_none")] pub rel: NonFunctional<LinkRelation>,
     #[serde(skip_serializing_if = "Option::is_none")]        pub start_index: Option<u32>,
     #[serde(skip_serializing_if = "NonFunctional::is_none")] pub summary: NonFunctional<String>, // TODO - langString/summaryMap?
     #[serde(skip_serializing_if = "Option::is_none")]        pub total_items: Option<u32>,
-    #[serde(skip_serializing_if = "Option::is_none")]        pub units: Option<String>, // TODO - string enum
+    #[serde(skip_serializing_if = "Option::is_none")]        pub units: Option<Units>,
     #[serde(skip_serializing_if = "Option::is_none")]        pub updated: Option<String>, // TODO - dateTime
     #[serde(skip_serializing_if = "Option::is_none")]        pub width: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]        pub subject: Option<LinkObject>,

@@ -5,6 +5,8 @@ fn main() {
         id: Some(Url::parse("https://grape.surgery/smack/outbox").unwrap()),
         type_: smacktivity::ActivityStreamsType::Actor,
         deleted: Some(String::from("eysterday lol")),
+        units: Some(smacktivity::Units::Km),
+        rel: smacktivity::NonFunctional::One(smacktivity::LinkRelation::Alternate),
         ..Default::default()
     };
 

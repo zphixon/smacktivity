@@ -18,9 +18,9 @@ for rust
     - [ ] end_time (xsd:dateTime)
     - [ ] published (xsd:dateTime)
     - [ ] start_time (xsd:dateTime)
-    - [ ] rel (RFC5988 https://datatracker.ietf.org/doc/html/rfc5988)
+    - [X] rel (RFC5988 https://datatracker.ietf.org/doc/html/rfc5988)
     - [ ] summaryMap (rdf:langString)
-    - [ ] units (string enum https://www.w3.org/TR/activitystreams-vocabulary/#dfn-units)
+    - [X] units (string enum https://www.w3.org/TR/activitystreams-vocabulary/#dfn-units)
     - [ ] updated (xsd:dateTime)
     - [ ] deleted (xsd:dateTime)
 - [ ] object hierarchy?
